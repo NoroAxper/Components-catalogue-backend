@@ -17,10 +17,35 @@ const connectDB = async () => {
     process.exit(1)
   }
 }
+app.use((req, res, next) => {
+  // Set CORS headers
+  res.header('Access-Control-Allow-Origin', '*')
+  // Add other headers as needed
 
-//Routes go here
+  // Allow all HTTP methods
+  res.header('Access-Control-Allow-Methods', 'GET, POST, PUT, DELETE, OPTIONS')
+
+  // Set the allowed headers for the preflight request
+  res.header(
+    'Access-Control-Allow-Headers',
+    'Origin, X-Requested-With, Content-Type, Accept'
+  )
+
+  // Continue to the next middleware
+  next()
+})
+// Routes go here
 app.get('/', (req, res) => {
-  res.send({ title: 'Books' })
+  try {
+    const feed = Book.find()
+    if (!feed) {
+      return res.status(404).json({ message: 'Feed not found' })
+    } else {
+      return res.json(feed)
+    }
+  } catch (error) {
+    return res.status(500).json({ message: error.message })
+  }
 })
 
 app.get('/books', async (req, res) => {
@@ -51,7 +76,7 @@ app.get('/add-note', async (req, res) => {
   }
 })
 
-//Connect to the database before listening
+// Connect to the database before listening
 connectDB().then(() => {
   app.listen(PORT, () => {
     console.log('listening for requests')
