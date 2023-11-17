@@ -1,15 +1,15 @@
 const mongoose = require('mongoose')
 
 const Schema = mongoose.Schema
-const BookSchema = new Schema({
-  title: {
+const UserSchema = new Schema({
+  email: {
     type: String,
     required: true
   },
-  body: {
+  password: {
     type: String,
     required: true
   }
 })
 
-module.exports = mongoose.model('Book', BookSchema)
+module.exports = mongoose.model('User', UserSchema)
