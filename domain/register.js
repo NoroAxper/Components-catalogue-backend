@@ -4,7 +4,7 @@ const saltRounds = 10
 
 const createUser = async (req, res) => {
   console.log(req.body)
-  const { email, password } = req.body
+  const { email, password, username } = req.body
 
   try {
     const existingUser = await User.findOne({ email })
@@ -15,6 +15,7 @@ const createUser = async (req, res) => {
     }
     const hash = await bcrypt.hash(password, saltRounds)
     const user = new User({
+      username,
       email,
       password: hash
     })
