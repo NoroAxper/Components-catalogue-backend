@@ -21,12 +21,13 @@ const createUser = async (req, res) => {
       password: hash
     })
     delete user.password
+    const newUser = await user.save()
     console.log(user)
     const token = jwt.sign({ email }, secret)
     res.status(200).json({
       user: {
-        username: user.username,
-        email: user.email
+        username: newUser.username,
+        email: newUser.email
       },
       token: token
     })
