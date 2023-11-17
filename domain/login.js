@@ -1,7 +1,6 @@
 const bcrypt = require('bcrypt')
 const jwt = require('jsonwebtoken')
 const User = require('../models/user')
-const { use } = require('../routes/login')
 const secret = process.env.JWT_SECRET
 
 const login = async (req, res) => {

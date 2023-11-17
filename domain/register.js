@@ -1,7 +1,8 @@
 const bcrypt = require('bcrypt')
 const User = require('../models/user')
 const saltRounds = 10
-
+const jwt = require('jsonwebtoken')
+const secret = process.env.JWT_SECRET
 const createUser = async (req, res) => {
   console.log(req.body)
   const { email, password, username } = req.body
@@ -21,7 +22,8 @@ const createUser = async (req, res) => {
     })
     delete user.password
     const newUser = await user.save()
-    res.status(201).json(newUser)
+    const token = jwt.sign({ email }, secret)
+    res.status(200).json({ user: newUser, token: token })
   } catch (error) {
     res.status(400).json({ message: error.message })
   }
