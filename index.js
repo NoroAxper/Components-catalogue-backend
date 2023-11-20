@@ -6,6 +6,7 @@ const app = express()
 app.use(bodyParser.json())
 const PORT = process.env.PORT || 4000
 
+
 mongoose.set('strictQuery', false)
 const connectDB = async () => {
   try {
@@ -42,6 +43,10 @@ app.use('/subscriber', subscriberRouter)
 
 const registerRouter = require('./routes/register')
 app.use('/register', registerRouter)
+
+const userRoute = require('./routes/user')
+const authenticateToken = require('./utils/auth')
+app.use('/user', authenticateToken, userRoute)
 // Connect to the database before listening
 connectDB().then(() => {
   app.listen(PORT, () => {

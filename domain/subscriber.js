@@ -1,7 +1,7 @@
 const Subscriber = require('../models/subscriber')
 
 const createSubscriber = async (req, res) => {
-  console.log(req.body)
+
   const { email } = req.body
 
   try {
