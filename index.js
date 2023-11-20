@@ -5,6 +5,8 @@ const mongoose = require('mongoose')
 const app = express()
 app.use(bodyParser.json())
 const PORT = process.env.PORT || 4000
+const cors = require('cors')
+app.use(cors())
 
 
 mongoose.set('strictQuery', false)
