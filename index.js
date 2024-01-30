@@ -8,7 +8,6 @@ const PORT = process.env.PORT || 3000
 const cors = require('cors')
 app.use(cors())
 
-
 mongoose.set('strictQuery', false)
 const connectDB = async () => {
   try {
