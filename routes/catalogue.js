@@ -12,4 +12,5 @@ const express = require('express')
 const router = express.Router()
 router.get('/', getCategories)
 router.post('/', postCategory)
+// router.patch('/', updateCategory)
 module.exports = router
