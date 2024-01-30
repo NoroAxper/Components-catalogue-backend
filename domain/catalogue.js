@@ -11,50 +11,66 @@ const getCategories = async (req, res) => {
 
 const postCategory = async (req, res) => {
     try {
-      const { category, subcategories } = req.body
-      const foundCategory = await Catalogue.findOne({ category })
+      const { categories } = req.body;
+  
+      const foundCategory = await Catalogue.findOne({
+        'categories.category': categories[0].category,
+      });
   
       if (!foundCategory) {
         const newCategory = new Catalogue({
-          category,
-          subcategories: [
+          categories: [
             {
-              subcategory: subcategories[0].subcategory,
-              subcategoryDetails: [
+              category: categories[0].category,
+              subcategories: [
                 {
-                  description: subcategories[0].subcategoryDetails[0].description,
-                  codeSnippetsJS:
-                    subcategories[0].subcategoryDetails[0].codeSnippetsJS,
-                  codeSnippetsCSS:
-                    subcategories[0].subcategoryDetails[0].codeSnippetsCSS
-                }
-              ]
-            }
-          ]
-        })
+                  subcategory: categories[0].subcategories[0].subcategory,
+                  subcategoryDetails: [
+                    {
+                      description:
+                        categories[0].subcategories[0].subcategoryDetails[0]
+                          .description,
+                      codeSnippetJS:
+                        categories[0].subcategories[0].subcategoryDetails[0]
+                          .codeSnippetJS,
+                      codeSnippetCSS:
+                        categories[0].subcategories[0].subcategoryDetails[0]
+                          .codeSnippetCSS,
+                    },
+                  ],
+                },
+              ],
+            },
+          ],
+        });
   
-        const savedCategory = await newCategory.save()
-        res.status(201).json(savedCategory)
+        const savedCategory = await newCategory.save();
+        res.status(201).json(savedCategory);
       } else {
-        foundCategory.subcategories.addToSet({
-          subcategory: subcategories[0].subcategory,
+        foundCategory.categories[0].subcategories.push({
+          subcategory: categories[0].subcategories[0].subcategory,
           subcategoryDetails: [
             {
-              description: subcategories[0].subcategoryDetails[0].description,
-              codeSnippetsJS: subcategories[0].subcategoryDetails[0].codeSnippetsJS,
-              codeSnippetsCSS:
-                subcategories[0].subcategoryDetails[0].codeSnippetsCSS
-            }
-          ]
-        })
+              description:
+                categories[0].subcategories[0].subcategoryDetails[0].description,
+              codeSnippetJS:
+                categories[0].subcategories[0].subcategoryDetails[0]
+                  .codeSnippetJS,
+              codeSnippetCSS:
+                categories[0].subcategories[0].subcategoryDetails[0]
+                  .codeSnippetCSS,
+            },
+          ],
+        });
   
-        const savedSubcategory = await foundCategory.save()
-        res.status(201).json(savedSubcategory)
+        const savedSubcategory = await foundCategory.save();
+        res.status(201).json(savedSubcategory);
       }
     } catch (error) {
-      res.status(400).json({ message: error.message })
+      res.status(400).json({ message: error.message });
     }
-  }
+  };
+  
 
 //   const updateCategory = async (req, res) => {
 //     try {
