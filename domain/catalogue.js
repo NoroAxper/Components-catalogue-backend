@@ -72,6 +72,27 @@ const deleteCategory = async (req, res) => {
     res.status(500).json({ message: error.message })
   }
 }
+const deleteSubCategory = async (req, res) => {
+  const { category, subcategories } = req.body
+  const subcategory = subcategories[0].subcategory
+
+  try {
+    const categoryToDelete = await Catalogue.findOneAndUpdate(
+      { category: category },
+      { $pull: { subcategories: { subcategory: subcategory } } },
+      { new: true }
+    )
+    if (!categoryToDelete) {
+      return res.status(404).json({ message: 'SubCategory not found' })
+    }
+    res.status(200).json({
+      message: 'SubCategory deleted successfully',
+      deletedCategory: categoryToDelete
+    })
+  } catch (error) {
+    res.status(500).json({ message: error.message })
+  }
+}
 //   const updateCategory = async (req, res) => {
 //     try {
 //       const { category, subcategory } = req.body;
@@ -94,4 +115,9 @@ const deleteCategory = async (req, res) => {
 //     }
 //   };
 
-module.exports = { getCategories, postCategory, deleteCategory }
+module.exports = {
+  getCategories,
+  postCategory,
+  deleteCategory,
+  deleteSubCategory
+}
