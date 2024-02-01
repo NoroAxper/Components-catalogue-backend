@@ -7,10 +7,15 @@
 
 // module.exports = router
 
-const { getCategories, postCategory } = require('../domain/catalogue')
+const {
+  getCategories,
+  postCategory,
+  deleteCategory
+} = require('../domain/catalogue')
 const express = require('express')
 const router = express.Router()
 router.get('/', getCategories)
 router.post('/', postCategory)
+router.delete('/', deleteCategory)
 // router.patch('/', updateCategory)
 module.exports = router
