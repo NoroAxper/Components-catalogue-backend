@@ -78,8 +78,8 @@ const deleteSubCategory = async (req, res) => {
 
   try {
     const categoryToDelete = await Catalogue.findOneAndUpdate(
-      { category: category },
-      { $pull: { subcategories: { subcategory: subcategory } } },
+      { category },
+      { $pull: { subcategories: { subcategory } } },
       { new: true }
     )
     if (!categoryToDelete) {
