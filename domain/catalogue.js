@@ -23,10 +23,10 @@ const postCategory = async (req, res) => {
             subcategoryDetails: [
               {
                 description: subcategories[0].subcategoryDetails[0].description,
-                codeSnippetsJS:
-                  subcategories[0].subcategoryDetails[0].codeSnippetsJS,
-                codeSnippetsCSS:
-                  subcategories[0].subcategoryDetails[0].codeSnippetsCSS
+                codeSnippetJS:
+                  subcategories[0].subcategoryDetails[0].codeSnippetJS,
+                codeSnippetCSS:
+                  subcategories[0].subcategoryDetails[0].codeSnippetCSS
               }
             ]
           }
@@ -41,10 +41,9 @@ const postCategory = async (req, res) => {
         subcategoryDetails: [
           {
             description: subcategories[0].subcategoryDetails[0].description,
-            codeSnippetsJS:
-              subcategories[0].subcategoryDetails[0].codeSnippetsJS,
-            codeSnippetsCSS:
-              subcategories[0].subcategoryDetails[0].codeSnippetsCSS
+            codeSnippetJS: subcategories[0].subcategoryDetails[0].codeSnippetJS,
+            codeSnippetCSS:
+              subcategories[0].subcategoryDetails[0].codeSnippetCSS
           }
         ]
       })
