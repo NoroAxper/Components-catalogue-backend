@@ -32,21 +32,21 @@ const postCategory = async (req, res) => {
           }
         ]
       })
-
       const savedCategory = await newCategory.save()
       res.status(201).json(savedCategory)
     } else {
-      foundCategory.subcategories.addToSet({
+      // console.log(subcategories[0].subcategoryDetails[0].code)
+      const newSubcategory = {
         subcategory: subcategories[0].subcategory,
         subcategoryDetails: [
           {
             description: subcategories[0].subcategoryDetails[0].description,
             codeSnippetJS: subcategories[0].subcategoryDetails[0].codeSnippetJS,
-            codeSnippetCSS:
-              subcategories[0].subcategoryDetails[0].codeSnippetCSS
+            codeSnippetCSS: subcategories[0].subcategoryDetails[0].codeSnippetCSS
           }
         ]
-      })
+      }
+      foundCategory.subcategories.addToSet(newSubcategory)
 
       const savedSubcategory = await foundCategory.save()
       res.status(201).json(savedSubcategory)

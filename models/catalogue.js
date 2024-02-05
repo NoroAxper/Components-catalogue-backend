@@ -9,8 +9,8 @@ const CatalogueSchema = new Schema({
       subcategoryDetails: [
         {
           description: { type: String, required: true },
-          codeSnippetJS: { type: String, required: true },
-          codeSnippetCSS: { type: String, required: true }
+          codeSnippetJS: { type: String },
+          codeSnippetCSS: { type: String }
         }
       ]
     }
