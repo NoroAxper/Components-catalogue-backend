@@ -46,4 +46,25 @@ router.get('/:subcategoryName', async (req, res) => {
   }
 });
 
+const fs = require('fs');
+const path = require('path');
+
+router.delete('/:filename', async (req, res) => {
+  try {
+    const filename = req.params.filename;
+    const filePath = path.join(__dirname, '..', 'uploads', filename);
+
+    // Delete the file from the uploads folder
+    fs.unlinkSync(filePath);
+
+    // Delete the corresponding document from the MongoDB collection
+    await Image.findOneAndDelete({ filename });
+
+    res.json({ message: 'Image deleted successfully' });
+  } catch (error) {
+    console.error('Error deleting image:', error);
+    res.status(500).json({ error: 'Internal Server Error' });
+  }
+});
+
 module.exports = router;
