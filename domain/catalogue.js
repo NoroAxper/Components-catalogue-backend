@@ -30,7 +30,9 @@ const postCategory = async (req, res) => {
             subcategoryDetails: [
               {
                 description: subcategories[0].subcategoryDetails[0].description,
-                imageUrl: imagePath,
+                imageUrls: [{
+                  imageUrl: imagePath
+                }],
                 codeSnippetJS:
                   subcategories[0].subcategoryDetails[0].codeSnippetJS,
                 codeSnippetCSS:
@@ -40,7 +42,6 @@ const postCategory = async (req, res) => {
           }
         ]
       })
-
       const savedCategory = await newCategory.save()
       res.status(201).json(savedCategory)
     } else {
@@ -50,7 +51,9 @@ const postCategory = async (req, res) => {
         subcategoryDetails: [
           {
             description: subcategories[0].subcategoryDetails[0].description,
-            imageUrl: imagePath,
+            imageUrls: [{
+              imageUrl: imagePath
+            }],
             codeSnippetJS: subcategories[0].subcategoryDetails[0].codeSnippetJS,
             codeSnippetCSS:
               subcategories[0].subcategoryDetails[0].codeSnippetCSS
@@ -67,6 +70,33 @@ const postCategory = async (req, res) => {
     res.status(400).json({ message: error.message })
   }
 }
+const postImage = async (req, res) => {
+  try {
+    const { subcategory } = req.body
+
+    // Process the file
+    const fileData = req.file;
+    const imageResult = await uploadFile(fileData);
+    const imagePath = `images/${imageResult.Key}`;
+
+    // Find the category containing the specified subcategory
+    const foundCategory = await Catalogue.findOne({ 'subcategories.subcategory' :subcategory });
+
+    if (!foundCategory) {
+      return res.status(404).json({ message: 'Category not found for the specified subcategory.' });
+    }
+
+    // Find the subcategory and update its imageUrls
+    const subcategoryIndex = foundCategory.subcategories.findIndex(sub => sub.subcategory === subcategory);
+    foundCategory.subcategories[subcategoryIndex].subcategoryDetails[0].imageUrls.push({ imageUrl: imagePath });
+    console.log("this is foundcategory: ", foundCategory)
+    // Save the updated category
+    const savedCategory = await foundCategory.save();
+    res.status(201).json(savedCategory);
+  } catch (error) {
+    res.status(400).json({ message: error.message });
+  }
+};
 
 const deleteCategory = async (req, res) => {
   const { category } = req.body
@@ -130,5 +160,6 @@ module.exports = {
   getCategories,
   postCategory,
   deleteCategory,
-  deleteSubCategory
+  deleteSubCategory,
+  postImage
 }

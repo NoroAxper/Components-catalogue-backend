@@ -3,7 +3,8 @@ const {
   getCategories,
   postCategory,
   deleteCategory,
-  deleteSubCategory
+  deleteSubCategory,
+  postImage
 } = require('../domain/catalogue')
 const express = require('express')
 const router = express.Router()
@@ -13,6 +14,7 @@ const upload = multer({ storage: storage })
 
 router.get('/', getCategories)
 router.post('/', upload.single('image'), handleFileUpload, postCategory)
+router.post('/image',upload.single('image'), handleFileUpload, postImage)
 router.delete('/', deleteCategory)
 router.delete('/subcategory', deleteSubCategory)
 
