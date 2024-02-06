@@ -2,12 +2,10 @@ require('dotenv').config();
 const bodyParser = require('body-parser');
 const express = require('express');
 const mongoose = require('mongoose');
-const cors = require('cors'); // Import the cors package
 
 const app = express();
 app.use('/uploads', express.static('uploads'));
 app.use(bodyParser.json());
-app.use(cors()); // Use the cors middleware
 
 mongoose.set('strictQuery', false);
 
