@@ -134,6 +134,28 @@ const deleteSubCategory = async (req, res) => {
     res.status(500).json({ message: error.message })
   }
 }
+const deleteImage = async (req, res) => {
+  console.log('you are here', req.body)
+  const { imageUrl } = req.body
+  try {
+    const imageToDelete = await Catalogue.findOneAndUpdate(
+      { 'subcategories.subcategoryDetails.imageUrls.imageUrl': imageUrl },
+      { $pull: { 'subcategories.$.subcategoryDetails.$[].imageUrls': { imageUrl } } },
+      { new: true }
+    );
+
+
+    if (!imageToDelete) {
+      return res.status(404).json({ message: 'Image not found' })
+    }
+    res.status(200).json({
+      message: 'Image deleted successfully',
+      deletedImage: imageToDelete
+    })
+  } catch (error) {
+    res.status(500).json({ message: error.message })
+  }
+}
 //   const updateCategory = async (req, res) => {
 //     try {
 //       const { category, subcategory } = req.body;
@@ -161,5 +183,6 @@ module.exports = {
   postCategory,
   deleteCategory,
   deleteSubCategory,
-  postImage
+  postImage,
+  deleteImage
 }

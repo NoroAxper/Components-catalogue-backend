@@ -4,7 +4,8 @@ const {
   postCategory,
   deleteCategory,
   deleteSubCategory,
-  postImage
+  postImage,
+  deleteImage
 } = require('../domain/catalogue')
 const express = require('express')
 const router = express.Router()
@@ -17,6 +18,7 @@ router.post('/', upload.single('image'), handleFileUpload, postCategory)
 router.post('/image',upload.single('image'), handleFileUpload, postImage)
 router.delete('/', deleteCategory)
 router.delete('/subcategory', deleteSubCategory)
+router.delete('/image', deleteImage)
 
 function handleFileUpload(req, res, next) {
   console.log('Received file:', req.file)
@@ -25,7 +27,6 @@ function handleFileUpload(req, res, next) {
     if (!req.file) {
       return res.status(400).json({ message: 'No file was uploaded.' })
     }
-
     req.uploadedFile = req.file // Attach file to the request object
     next()
   } catch (error) {
