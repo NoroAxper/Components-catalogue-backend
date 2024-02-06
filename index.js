@@ -2,12 +2,12 @@ require('dotenv').config();
 const bodyParser = require('body-parser');
 const express = require('express');
 const mongoose = require('mongoose');
-const cors = require('cors');
+const cors = require('cors'); // Import the cors package
 
 const app = express();
 app.use('/uploads', express.static('uploads'));
 app.use(bodyParser.json());
-app.use(cors());
+app.use(cors()); // Use the cors middleware
 
 mongoose.set('strictQuery', false);
 
@@ -23,24 +23,6 @@ const connectDB = async () => {
     process.exit(1);
   }
 };
-
-app.use((req, res, next) => {
-  // Set CORS headers
-  res.header('Access-Control-Allow-Origin', '*');
-  // Add other headers as needed
-
-  // Allow all HTTP methods
-  res.header('Access-Control-Allow-Methods', 'GET, POST, PUT, DELETE, OPTIONS');
-
-  // Set the allowed headers for the preflight request
-  res.header(
-    'Access-Control-Allow-Headers',
-    'Origin, X-Requested-With, Content-Type, Accept'
-  );
-
-  // Continue to the next middleware
-  next();
-});
 
 // Existing routes
 const catalogueRouter = require('./routes/catalogue');
