@@ -1,4 +1,5 @@
 const Catalogue = require('../models/catalogue')
+const { uploadFile } = require('../s3')
 
 const getCategories = async (req, res) => {
   try {
@@ -11,10 +12,16 @@ const getCategories = async (req, res) => {
 
 const postCategory = async (req, res) => {
   try {
-    const { category, subcategories } = req.body
+    const { category, subcategories } = JSON.parse(req.body.data)
     const foundCategory = await Catalogue.findOne({ category })
 
+    // Process the file
+    const fileData = req.file
+    const imageResult = await uploadFile(fileData)
+    const imagePath = `images/${imageResult.Key}`
+
     if (!foundCategory) {
+      // Create a new category
       const newCategory = new Catalogue({
         category,
         subcategories: [
@@ -23,6 +30,7 @@ const postCategory = async (req, res) => {
             subcategoryDetails: [
               {
                 description: subcategories[0].subcategoryDetails[0].description,
+                imageUrl: imagePath,
                 codeSnippetJS:
                   subcategories[0].subcategoryDetails[0].codeSnippetJS,
                 codeSnippetCSS:
@@ -32,30 +40,34 @@ const postCategory = async (req, res) => {
           }
         ]
       })
+
       const savedCategory = await newCategory.save()
       res.status(201).json(savedCategory)
     } else {
-      // console.log(subcategories[0].subcategoryDetails[0].code)
+      // Add a new subcategory to an existing category
       const newSubcategory = {
         subcategory: subcategories[0].subcategory,
         subcategoryDetails: [
           {
             description: subcategories[0].subcategoryDetails[0].description,
+            imageUrl: imagePath,
             codeSnippetJS: subcategories[0].subcategoryDetails[0].codeSnippetJS,
-            codeSnippetCSS: subcategories[0].subcategoryDetails[0].codeSnippetCSS
+            codeSnippetCSS:
+              subcategories[0].subcategoryDetails[0].codeSnippetCSS
           }
         ]
       }
+
       foundCategory.subcategories.addToSet(newSubcategory)
 
       const savedSubcategory = await foundCategory.save()
       res.status(201).json(savedSubcategory)
-      console.log(savedSubcategory)
     }
   } catch (error) {
     res.status(400).json({ message: error.message })
   }
 }
+
 const deleteCategory = async (req, res) => {
   const { category } = req.body
   try {
