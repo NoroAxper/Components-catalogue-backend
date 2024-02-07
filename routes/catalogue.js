@@ -15,7 +15,7 @@ const upload = multer({ storage: storage })
 
 router.get('/', getCategories)
 router.post('/', upload.single('image'), handleFileUpload, postCategory)
-router.post('/image',upload.single('image'), handleFileUpload, postImage)
+router.post('/image', upload.single('image'), handleFileUpload, postImage)
 router.delete('/', deleteCategory)
 router.delete('/subcategory', deleteSubCategory)
 router.delete('/image', deleteImage)

@@ -73,6 +73,8 @@ app.post('/image', upload.single('image'), async (req, res) => {
 const catalogueRouter = require('./routes/catalogue')
 app.use('/catalogue', catalogueRouter)
 
+const userRouter = require('./routes/user')
+app.use('/user', userRouter)
 // Connect to the database before listening
 connectDB().then(() => {
   app.listen(PORT, () => {

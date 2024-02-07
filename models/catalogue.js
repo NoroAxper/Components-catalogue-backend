@@ -9,9 +9,11 @@ const CatalogueSchema = new Schema({
       subcategoryDetails: [
         {
           description: { type: String, required: true },
-          imageUrls: [{
-            imageUrl: {type: String}
-          }],
+          imageUrls: [
+            {
+              imageUrl: { type: String }
+            }
+          ],
           codeSnippetJS: { type: String },
           codeSnippetCSS: { type: String }
         }

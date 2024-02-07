@@ -30,9 +30,11 @@ const postCategory = async (req, res) => {
             subcategoryDetails: [
               {
                 description: subcategories[0].subcategoryDetails[0].description,
-                imageUrls: [{
-                  imageUrl: imagePath
-                }],
+                imageUrls: [
+                  {
+                    imageUrl: imagePath
+                  }
+                ],
                 codeSnippetJS:
                   subcategories[0].subcategoryDetails[0].codeSnippetJS,
                 codeSnippetCSS:
@@ -51,9 +53,11 @@ const postCategory = async (req, res) => {
         subcategoryDetails: [
           {
             description: subcategories[0].subcategoryDetails[0].description,
-            imageUrls: [{
-              imageUrl: imagePath
-            }],
+            imageUrls: [
+              {
+                imageUrl: imagePath
+              }
+            ],
             codeSnippetJS: subcategories[0].subcategoryDetails[0].codeSnippetJS,
             codeSnippetCSS:
               subcategories[0].subcategoryDetails[0].codeSnippetCSS
@@ -75,28 +79,36 @@ const postImage = async (req, res) => {
     const { subcategory } = req.body
 
     // Process the file
-    const fileData = req.file;
-    const imageResult = await uploadFile(fileData);
-    const imagePath = `images/${imageResult.Key}`;
+    const fileData = req.file
+    const imageResult = await uploadFile(fileData)
+    const imagePath = `images/${imageResult.Key}`
 
     // Find the category containing the specified subcategory
-    const foundCategory = await Catalogue.findOne({ 'subcategories.subcategory' :subcategory });
+    const foundCategory = await Catalogue.findOne({
+      'subcategories.subcategory': subcategory
+    })
 
     if (!foundCategory) {
-      return res.status(404).json({ message: 'Category not found for the specified subcategory.' });
+      return res
+        .status(404)
+        .json({ message: 'Category not found for the specified subcategory.' })
     }
 
     // Find the subcategory and update its imageUrls
-    const subcategoryIndex = foundCategory.subcategories.findIndex(sub => sub.subcategory === subcategory);
-    foundCategory.subcategories[subcategoryIndex].subcategoryDetails[0].imageUrls.push({ imageUrl: imagePath });
-    console.log("this is foundcategory: ", foundCategory)
+    const subcategoryIndex = foundCategory.subcategories.findIndex(
+      (sub) => sub.subcategory === subcategory
+    )
+    foundCategory.subcategories[
+      subcategoryIndex
+    ].subcategoryDetails[0].imageUrls.push({ imageUrl: imagePath })
+    console.log('this is foundcategory: ', foundCategory)
     // Save the updated category
-    const savedCategory = await foundCategory.save();
-    res.status(201).json(savedCategory);
+    const savedCategory = await foundCategory.save()
+    res.status(201).json(savedCategory)
   } catch (error) {
-    res.status(400).json({ message: error.message });
+    res.status(400).json({ message: error.message })
   }
-};
+}
 
 const deleteCategory = async (req, res) => {
   const { category } = req.body
@@ -140,10 +152,13 @@ const deleteImage = async (req, res) => {
   try {
     const imageToDelete = await Catalogue.findOneAndUpdate(
       { 'subcategories.subcategoryDetails.imageUrls.imageUrl': imageUrl },
-      { $pull: { 'subcategories.$.subcategoryDetails.$[].imageUrls': { imageUrl } } },
+      {
+        $pull: {
+          'subcategories.$.subcategoryDetails.$[].imageUrls': { imageUrl }
+        }
+      },
       { new: true }
-    );
-
+    )
 
     if (!imageToDelete) {
       return res.status(404).json({ message: 'Image not found' })
