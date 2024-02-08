@@ -75,6 +75,9 @@ app.use('/catalogue', catalogueRouter)
 
 const userRouter = require('./routes/user')
 app.use('/user', userRouter)
+
+const authRouter = require('./routes/auth')
+app.use('/auth', authRouter)
 // Connect to the database before listening
 connectDB().then(() => {
   app.listen(PORT, () => {
