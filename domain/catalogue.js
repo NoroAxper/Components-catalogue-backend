@@ -147,7 +147,6 @@ const deleteSubCategory = async (req, res) => {
   }
 }
 const deleteImage = async (req, res) => {
-  console.log('you are here', req.body)
   const { imageUrl } = req.body
   try {
     const imageToDelete = await Catalogue.findOneAndUpdate(
@@ -166,6 +165,34 @@ const deleteImage = async (req, res) => {
     res.status(200).json({
       message: 'Image deleted successfully',
       deletedImage: imageToDelete
+    })
+  } catch (error) {
+    res.status(500).json({ message: error.message })
+  }
+}
+const updateDescription = async (req, res) => {
+  console.log('you are here', req.body.description)
+  try {
+    const { description, subcategory } = req.body
+    const setNewDescription = await Catalogue.updateOne(
+      {
+        "subcategories.subcategory": subcategory
+      },
+      {
+        $set: {
+          "subcategories.$[outer].subcategoryDetails.$[inner].description": description
+        }
+      },
+      {
+        arrayFilters: [
+          { "outer.subcategory": subcategory },
+          { "inner.description": { $exists: true } } // Ensure description exists
+        ]
+      }
+    )
+    res.status(200).json({
+      message: 'Description updated successfully',
+      description: description
     })
   } catch (error) {
     res.status(500).json({ message: error.message })
@@ -199,5 +226,6 @@ module.exports = {
   deleteCategory,
   deleteSubCategory,
   postImage,
-  deleteImage
+  deleteImage,
+  updateDescription
 }
