@@ -170,55 +170,23 @@ const deleteImage = async (req, res) => {
     res.status(500).json({ message: error.message })
   }
 }
-const updateDescription = async (req, res) => {
-  console.log('you are here', req.body.description)
+const updateCatalogue = async (req, res) => {
+  const formData = req.body
+  console.log("this is body: ", req.body)
   try {
-    const { description, subcategory } = req.body
-    const setNewDescription = await Catalogue.updateOne(
-      {
-        "subcategories.subcategory": subcategory
-      },
-      {
-        $set: {
-          "subcategories.$[outer].subcategoryDetails.$[inner].description": description
-        }
-      },
-      {
-        arrayFilters: [
-          { "outer.subcategory": subcategory },
-          { "inner.description": { $exists: true } } // Ensure description exists
-        ]
-      }
-    )
+    // Assuming formData contains the entire form data including category and subcategories
+    // Update the document based on the category name
+    const updatingCatalogue = await Catalogue.updateOne({ category: formData.category }, { $set: formData });
+    
     res.status(200).json({
-      message: 'Description updated successfully',
-      description: description
+      message: 'Catalogue updated successfully',
+      updatedCatalogue: updatingCatalogue
     })
   } catch (error) {
-    res.status(500).json({ message: error.message })
+    console.error('Error updating catalogue:', error);
+    throw error; // Handle error appropriately
   }
-}
-//   const updateCategory = async (req, res) => {
-//     try {
-//       const { category, subcategory } = req.body;
-//       const foundCategory = await Catalogue.findOne({ category });
-
-//       if (foundCategory !== null) {
-//         const updatedCategory = await Catalogue.updateOne(
-//           { category },
-//           { $push: { subcategories: subcategory } }
-//         );
-
-//         console.log(updatedCategory);
-//         res.status(201).json(updatedCategory);
-//       } else {
-//         // Handle the case when the category is not found
-//         res.status(404).json({ message: 'Category not found' });
-//       }
-//     } catch (error) {
-//       res.status(400).json({ message: error.message });
-//     }
-//   };
+};
 
 module.exports = {
   getCategories,
@@ -227,5 +195,5 @@ module.exports = {
   deleteSubCategory,
   postImage,
   deleteImage,
-  updateDescription
+  updateCatalogue
 }
